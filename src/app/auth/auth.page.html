@@ -1,21 +1,46 @@
 <ion-app>
   <!-- Header -->
-  <ion-header>
-    <!-- Toolbar -->
-    <ion-toolbar>
-      <ion-buttons slot="secondary">
-        <ion-button>
-          <ion-icon slot="icon-only" name="search"></ion-icon>
-        </ion-button>
+  <ion-header class="ion-no-border">
+    <ion-toolbar class="ion-padding">
+      <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
       </ion-buttons>
-      <ion-buttons slot="primary">
-        <ion-button>
-          <ion-icon slot="icon-only" md="ellipsis-vertical" ios="ellipsis-horizontal"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-      <ion-title>Lorem</ion-title>
+      <ion-title size="large">Login</ion-title>
     </ion-toolbar>
   </ion-header>
-  <router-outlet></router-outlet>
-  <!-- <ion-router-outlet></ion-router-outlet> -->
+
+  <ion-content>
+    <ion-grid>
+      
+      <ion-row class="ion-justify-content-center">
+        <img src="https://icons.iconarchive.com/icons/diversity-avatars/avatars/1024/batman-icon.png" class="avatar">
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">Email</ion-label>
+            <ion-input inputmode="email" type="email" required></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">Password</ion-label>
+            <ion-input inputmode="text" type="password" required></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <br>
+      <ion-row>
+        <ion-col>
+          <ion-button expand="block" fill="solid" size="large">Login</ion-button>
+        </ion-col>
+      </ion-row>
+
+    </ion-grid>
+  </ion-content>
+
 </ion-app>
