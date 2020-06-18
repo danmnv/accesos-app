@@ -1,26 +1,33 @@
-<ion-header>
-  <ion-toolbar>
+<ion-app>
+  <!-- Header -->
+  <ion-header>
+    <!-- Toolbar -->
+    <ion-toolbar>
       <ion-buttons slot="secondary">
-          <ion-button>
-              <ion-icon slot="icon-only" name="search"></ion-icon>
-          </ion-button>
+        <ion-button>
+          <ion-icon slot="icon-only" name="search"></ion-icon>
+        </ion-button>
       </ion-buttons>
       <ion-buttons slot="primary">
-          <ion-button>
-              <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
-          </ion-button>
+        <ion-button>
+          <ion-icon slot="icon-only" md="ellipsis-vertical" ios="ellipsis-horizontal"></ion-icon>
+        </ion-button>
       </ion-buttons>
       <ion-title>Header</ion-title>
-  </ion-toolbar>
-</ion-header>
+    </ion-toolbar>
+  </ion-header>
+  
+  <!-- Content (router) -->
+  <ion-content>
 
-<ion-content [fullscreen]="true">
-  <ion-tabs>
-    <ion-tab-bar slot="bottom">
+    <!-- Tabs -->
+    <ion-tabs>
+      <ion-tab-bar slot="bottom">
         <ion-tab-button *ngFor="let tab of tabs" [tab]="tab.name">
-            <ion-icon [name]="tab.icon"></ion-icon>
-            <ion-label>{{ tab.route }}</ion-label>
+          <ion-icon [name]="tab.icon"></ion-icon>
+          <ion-label>{{ tab.route }}</ion-label>
         </ion-tab-button>
-    </ion-tab-bar>
-  </ion-tabs>
-</ion-content>
+      </ion-tab-bar>
+    </ion-tabs>
+  </ion-content>
+</ion-app>

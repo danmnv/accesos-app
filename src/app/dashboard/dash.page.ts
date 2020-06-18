@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
 export class Dashboard {
 
   tabs: Array<{ name: string, route: string, icon: string}> = [
-    { name: 'home', route: 'Home', icon: 'home' },
+    { name: 'home', route: 'Home', icon: 'home-sharp' },
     { name: 'record', route: 'Record', icon: 'server' },
     { name: 'account', route: 'Account', icon: 'person-circle' },
   ];
