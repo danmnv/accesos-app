@@ -1,3 +1,21 @@
-<p>
-  auth works!
-</p>
+<ion-app>
+  <!-- Header -->
+  <ion-header>
+    <!-- Toolbar -->
+    <ion-toolbar>
+      <ion-buttons slot="secondary">
+        <ion-button>
+          <ion-icon slot="icon-only" name="search"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-buttons slot="primary">
+        <ion-button>
+          <ion-icon slot="icon-only" md="ellipsis-vertical" ios="ellipsis-horizontal"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-title>Lorem</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <router-outlet></router-outlet>
+  <!-- <ion-router-outlet></ion-router-outlet> -->
+</ion-app>
