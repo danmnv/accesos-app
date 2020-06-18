@@ -13,7 +13,7 @@
           <ion-icon slot="icon-only" md="ellipsis-vertical" ios="ellipsis-horizontal"></ion-icon>
         </ion-button>
       </ion-buttons>
-      <ion-title>Header</ion-title>
+      <ion-title>{{ title | titlecase }}</ion-title>
     </ion-toolbar>
   </ion-header>
   
@@ -21,11 +21,12 @@
   <ion-content>
 
     <!-- Tabs -->
-    <ion-tabs>
+    <ion-tabs #menuTabs (ionTabsDidChange)="tabChanged()">
+      <!-- Tab bar -->
       <ion-tab-bar slot="bottom">
-        <ion-tab-button *ngFor="let tab of tabs" [tab]="tab.name">
-          <ion-icon [name]="tab.icon"></ion-icon>
-          <ion-label>{{ tab.route }}</ion-label>
+        <ion-tab-button *ngFor="let item of items" [tab]="item.path">
+          <ion-icon [name]="item.icon"></ion-icon>
+          <ion-label>{{ item.title }}</ion-label>
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
