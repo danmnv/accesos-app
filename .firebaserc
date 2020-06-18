@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "accesos-175004dm": {
+      "hosting": {
+        "app": [
+          "accesos-175004dm"
+        ]
+      }
+    }
+  }
+}
