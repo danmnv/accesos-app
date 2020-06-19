@@ -23,10 +23,10 @@ const routes: Routes = [
         path: 'record',
         component: RecordComponent
       },
-      {
-        path: 'account',
-        component: AccountComponent
-      }
+      // {
+      //   path: 'account',
+      //   component: AccountComponent
+      // }
     ]
   },
 ];
