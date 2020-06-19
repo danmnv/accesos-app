@@ -3,17 +3,15 @@
   <ion-header>
     <!-- Toolbar -->
     <ion-toolbar>
-      <ion-buttons slot="secondary">
-        <ion-button>
-          <ion-icon slot="icon-only" name="search"></ion-icon>
-        </ion-button>
-      </ion-buttons>
       <ion-buttons slot="primary">
         <ion-button>
-          <ion-icon slot="icon-only" md="ellipsis-vertical" ios="ellipsis-horizontal"></ion-icon>
+          <ion-icon slot="icon-only" [name]="options"></ion-icon>
+        </ion-button>
+        <ion-button (click)="openAccount()">
+          <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
         </ion-button>
       </ion-buttons>
-      <ion-title>{{ title | titlecase }}</ion-title>
+      <ion-title>Logo</ion-title>
     </ion-toolbar>
   </ion-header>
   
