@@ -15,8 +15,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content fullscreen>
-  <ion-list *ngIf="user$.user | async; let account">
+<ion-content fullscreen *ngIf="user$.user | async; let account">
+  <ion-list>
     <ion-item-group>
       <ion-item>
         <ion-avatar slot="start">
@@ -27,7 +27,6 @@
         </ion-label>
       </ion-item>
       <ion-item-divider>
-        <ion-icon slot="start" name="person-outline"></ion-icon>
         <ion-label>
           General
         </ion-label>
@@ -51,7 +50,7 @@
 
     <ion-item-group>
       <ion-item-divider></ion-item-divider>
-      <ion-item lines="none" button (click)="alertConfirmation()">
+      <ion-item lines="none" detail button (click)="alertConfirmation()">
         <ion-label color="danger">Log out</ion-label>
       </ion-item>
     </ion-item-group>
