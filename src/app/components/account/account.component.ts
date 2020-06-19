@@ -3,6 +3,7 @@ import { ModalController, AlertController } from '@ionic/angular';
 import { temporaryDeclaration } from '@angular/compiler/src/compiler_util/expression_converter';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-account',
@@ -11,7 +12,7 @@ import { Router } from '@angular/router';
 })
 export class AccountComponent implements OnInit {
 
-  constructor(public modalController: ModalController, public alertController: AlertController, private afAuth: AngularFireAuth, private router: Router) { }
+  constructor(public modalController: ModalController, public alertController: AlertController, private afAuth: AngularFireAuth, public user$: UserService, private router: Router) { }
 
   ngOnInit() {}
 
