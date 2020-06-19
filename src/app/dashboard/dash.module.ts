@@ -7,15 +7,18 @@ import { Dashboard } from './dash.page';
 import { DashboardRoutingModule } from './dash-routing.module';
 
 import { AccountComponent } from '../components/account/account.component';
+import { HomeComponent } from '../components/home/home.component';
 
+import { QRCodeModule } from 'angularx-qrcode';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    DashboardRoutingModule
+    DashboardRoutingModule,
+    QRCodeModule
   ],
-  declarations: [Dashboard, AccountComponent]
+  declarations: [Dashboard, HomeComponent, AccountComponent]
 })
 export class DashboardModule {}
