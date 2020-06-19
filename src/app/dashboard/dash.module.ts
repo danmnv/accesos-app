@@ -6,6 +6,8 @@ import { Dashboard } from './dash.page';
 
 import { DashboardRoutingModule } from './dash-routing.module';
 
+import { AccountComponent } from '../components/account/account.component';
+
 
 @NgModule({
   imports: [
@@ -14,6 +16,6 @@ import { DashboardRoutingModule } from './dash-routing.module';
     IonicModule,
     DashboardRoutingModule
   ],
-  declarations: [Dashboard]
+  declarations: [Dashboard, AccountComponent]
 })
 export class DashboardModule {}
