@@ -2,8 +2,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Subscription, interval } from 'rxjs';
 import { UserService } from 'src/app/services/user.service';
-import { Storage } from '@ionic/storage';
 import CryptoJS from 'crypto-js';
+
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -18,7 +19,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   subscription : Subscription;
   timer: Observable<number> = interval(100);
   loadData: Promise<boolean>;
-  key: String = "t2vjd@Nzh#Bo9mT^8S3@";
+  
 
   constructor(private user$: UserService) {
     this.user$.getLocalUser().then(user => {
@@ -42,7 +43,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   autogenCode(uid: string) {
-    this.coded = CryptoJS.AES.encrypt(uid, this.key).toString();
+    this.coded = CryptoJS.AES.encrypt(uid, environment.secret_key).toString();
   }
 
 }
