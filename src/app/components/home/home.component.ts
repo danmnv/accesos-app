@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Subscription, interval } from 'rxjs';
 import { UserService } from 'src/app/services/user.service';
+import { Storage } from '@ionic/storage';
 import CryptoJS from 'crypto-js';
 
 @Component({
@@ -16,11 +17,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   coded: String = '';
   subscription : Subscription;
   timer: Observable<number> = interval(100);
-  key: String = "t2vjd@rjsOMX&pR@4WNzh#Bo9wgehFmT^8YS3@^b";
+  loadData: Promise<boolean>;
+  key: String = "t2vjd@Nzh#Bo9mT^8S3@";
 
   constructor(private user$: UserService) {
-    this.autogenCode();
-    this.subscription = this.timer.subscribe(() => this.setTimerValue());
+    this.user$.getLocalUser().then(user => {
+      this.autogenCode(user.docid);
+      this.subscription = this.timer.subscribe(() => this.setTimerValue(user.docid));
+      this.loadData = Promise.resolve(true);
+    })
   }
 
   ngOnInit() {}
@@ -29,15 +34,15 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  setTimerValue() {
+  setTimerValue(uid: string) {
     this.countdown = ++this.countdown > 150 ? 0 : this.countdown;
     this.progress = (this.countdown / 150);
 
-    if (this.countdown == 0) this.autogenCode();
+    if (this.countdown == 0) this.autogenCode(uid);
   }
 
-  autogenCode() {
-    this.coded = CryptoJS.AES.encrypt("hola", this.key).toString();
+  autogenCode(uid: string) {
+    this.coded = CryptoJS.AES.encrypt(uid, this.key).toString();
   }
 
 }
