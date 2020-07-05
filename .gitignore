@@ -25,7 +25,7 @@ npm-debug.log*
 /.vscode
 /coverage
 /dist
-/node_modules
+node_modules/
 /platforms
 /plugins
 /www
@@ -33,3 +33,5 @@ npm-debug.log*
 resources/
 
 src/environments/environment.ts
+
+emulator_key.json
