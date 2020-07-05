@@ -10,6 +10,7 @@ interface User {
   name: String,
   ap_pat: String,
   ap_mat?: String,
+  rol: Boolean
 }
 
 @Injectable({
