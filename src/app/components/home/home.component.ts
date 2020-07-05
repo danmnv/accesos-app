@@ -2,11 +2,12 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 import { Observable } from 'rxjs';
 import { Subscription, interval } from 'rxjs';
 import { UserService } from 'src/app/services/user.service';
-import CryptoJS from 'crypto-js';
-import jsQR from 'jsqr';
+import { ToastController, LoadingController } from '@ionic/angular';
+import { AngularFireFunctions } from '@angular/fire/functions';
 
 import { environment } from '../../../environments/environment';
-import { ToastController, LoadingController } from '@ionic/angular';
+import jsQR from 'jsqr';
+import { TokenService } from 'src/app/services/token.service';
 
 @Component({
   selector: 'app-home',
@@ -17,12 +18,12 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   countdown = 0;
   progress = 0;
-  coded: String = '';
+  coded: String;
   subscription : Subscription;
-  timer: Observable<number> = interval(100);
+  timer: Observable<number>;
   
-  showQR: Boolean = false;
-  scanActive: Boolean = false;
+  showQR: Boolean;
+  scanActive: Boolean;
   videoElement: any;
   canvasElement: any;
   canvasContext: any;
@@ -32,43 +33,72 @@ export class HomeComponent implements OnInit, OnDestroy {
   
   loading: HTMLIonLoadingElement;
 
-  constructor(private user$: UserService, private toastCtrl: ToastController, private loadingCtrl: LoadingController) {}
+  constructor(private user$: UserService, private token$: TokenService, private toastCtrl: ToastController, private loadingCtrl: LoadingController) {
+    this.coded = '';
+    this.showQR = false;
+    this.scanActive = false;
+    this.timer = interval(100);
+  }
+
+  ngOnInit() {
+    this.user$.afAuth.onAuthStateChanged(auth => {
+      if (auth) {
+        this.user$.user.subscribe(async user => {
+            if (!user.admin) {
+              await this.showLoad();
+
+              this.token$.fetchToken().then(async response => {
+                await this.stopLoad();
+                
+                if (response.ok) {
+                  this.showQR = true;
+                  this.coded = response.jwt;
+                  this.subscription = this.timer.subscribe(() => this.setTimerValue());
+                }
+              });
+            }
+          })
+      }
+    });
+  }
 
   ngAfterViewInit(): void {
     this.videoElement = this.video.nativeElement;
     this.canvasElement = this.canvas.nativeElement;
     this.canvasContext = this.canvas.nativeElement.getContext('2d');
   }
-  ngOnInit() {
-    this.user$.afAuth.onAuthStateChanged(auth => {
-      if (auth) {
-        this.user$.user.subscribe(user => {
-            if (user.admin) {
-              this.showQR = false;
-            }
-            else {
-              this.showQR = true;
-              this.autogenCode(user.id);
-              this.subscription = this.timer.subscribe(() => this.setTimerValue(user.id));
-            }
-          })
-      }
-    })
-  }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
 
-  setTimerValue(uid: string) {
-    this.countdown = ++this.countdown > 150 ? 0 : this.countdown;
-    this.progress = (this.countdown / 150);
-
-    if (this.countdown == 0) this.autogenCode(uid);
+  fetchToken() {
+    this.token$.fetchToken().then(async response => {
+      await this.stopLoad();
+      
+      if (response.ok) this.coded = response.jwt;
+    });
   }
 
-  autogenCode(uid: string) {
-    this.coded = CryptoJS.AES.encrypt(uid, environment.secret_key).toString();
+  async setTimerValue() {
+    this.countdown = ++this.countdown > 600 ? 0 : this.countdown;
+    this.progress = (this.countdown / 600);
+
+    if (this.countdown == 0) {
+      await this.showLoad();
+      
+      this.fetchToken();
+    }
+  }
+
+  async showLoad() {
+    this.loading = await this.loadingCtrl.create({});
+    await this.loading.present();
+  }
+
+  async stopLoad() {
+    await this.loading.dismiss();
+    this.loading = null;
   }
 
   async startScan() {
@@ -77,16 +107,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.videoElement.setAttribute('playsinline', true);
     this.videoElement.play();
 
-    this.loading = await this.loadingCtrl.create({});
-    await this.loading.present();
+    await this.showLoad();
     requestAnimationFrame(this.scan.bind(this));
   }
 
   async scan() {
     if (this.videoElement.readyState === this.videoElement.HAVE_ENOUGH_DATA) {
       if (this.loading) {
-        await this.loading.dismiss();
-        this.loading = null;
+        await this.stopLoad();
         this.scanActive = true;
       }
 
@@ -103,7 +131,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       console.log(code);
 
       if (code) {
-        this.showConfirm(`Token_ ${CryptoJS.AES.decrypt(code.data, environment.secret_key).toString(CryptoJS.enc.Utf8)}`);
+        this.showConfirm(`Token_ ${code}`);
         this.scanActive = false;
       }
       else if (this.scanActive) requestAnimationFrame(this.scan.bind(this));
