@@ -1,5 +1,6 @@
-<ion-grid *ngIf="loadData | async">
-  <div *ngIf="showQR">
+<ion-grid color="light">
+  
+  <div *ngIf="showQR; else adminSpace">
     <ion-row>
       <ion-col>
         <qrcode width="256" [qrdata]="coded" elementType="url" errorCorrectionLevel="'Q'" margin="1"></qrcode>
@@ -12,4 +13,25 @@
       </ion-col>
     </ion-row>
   </div>
+
+  <video #video [hidden]="!scanActive" width="100%"></video>
+
+  <canvas #canvas hidden></canvas>
+  <ng-template #adminSpace>
+
+    <ion-fab vertical="bottom" horizontal="end">
+      <ion-fab-button><ion-icon [name]="scanActive ? 'stop-outline' : 'add'" (click)="action()"></ion-icon></ion-fab-button>
+      <!-- <ion-fab-list side="top">
+        <ion-fab-button>
+          <ion-icon name="logo-facebook"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button>
+          <ion-icon name="logo-twitter"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button>
+          <ion-icon name="logo-youtube"></ion-icon>
+        </ion-fab-button>
+      </ion-fab-list> -->
+    </ion-fab>
+  </ng-template>
 </ion-grid>
