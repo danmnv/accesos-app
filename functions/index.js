@@ -1,8 +1,11 @@
+// Config
+require('./environment/config');
+
 const functions = require('firebase-functions');
+const jwt = require('jsonwebtoken');
 
-// // Create and Deploy Your First Cloud Functions
-// https://firebase.google.com/docs/functions/write-firebase-functions
+exports.createToken = functions.https.onCall((data, context) => {
+    let token = jwt.sign({ uid: context.auth.uid }, process.env.PRIVATE_KEY, { expiresIn: process.env.EXPIRATION });
 
-exports.helloWorld = functions.https.onRequest((request, response) => {
-    response.send("Hello from Firebase!");
+    return { ok: true, jwt: token };
 });
