@@ -20,16 +20,30 @@ export class HomeComponent implements OnInit, OnDestroy {
   timer: Observable<number> = interval(100);
   loadData: Promise<boolean>;
   
+  showQR: Boolean = false;
 
-  constructor(private user$: UserService) {
-    this.user$.getLocalUser().then(user => {
-      this.autogenCode(user.docid);
-      this.subscription = this.timer.subscribe(() => this.setTimerValue(user.docid));
-      this.loadData = Promise.resolve(true);
+  constructor(private user$: UserService) {}
+
+  ngOnInit() {
+    this.user$.afAuth.onAuthStateChanged(auth => {
+      if (auth) {
+        this.user$.user.subscribe(user => {
+          // this.user$.getLocalUser().then(user => {
+            console.log(user);
+            if (user.admin) {
+              this.showQR = false;
+            }
+            else {
+              this.showQR = true;
+              this.autogenCode(user.id);
+              this.subscription = this.timer.subscribe(() => this.setTimerValue(user.id));
+              this.loadData = Promise.resolve(true);
+            }
+          })
+        // })
+      }
     })
   }
-
-  ngOnInit() {}
 
   ngOnDestroy() {
     this.subscription.unsubscribe();

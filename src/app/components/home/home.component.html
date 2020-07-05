@@ -1,13 +1,15 @@
 <ion-grid *ngIf="loadData | async">
-  <ion-row>
-    <ion-col>
-      <qrcode width="256" [qrdata]="coded" elementType="url" errorCorrectionLevel="'Q'" margin="1"></qrcode>
-    </ion-col>
-  </ion-row>
-
-  <ion-row>
-    <ion-col>
-      <ion-progress-bar color="tertiary" [value]="progress" buffer="0" class="progress-qr"></ion-progress-bar>
-    </ion-col>
-  </ion-row>
+  <div *ngIf="showQR">
+    <ion-row>
+      <ion-col>
+        <qrcode width="256" [qrdata]="coded" elementType="url" errorCorrectionLevel="'Q'" margin="1"></qrcode>
+      </ion-col>
+    </ion-row>
+  
+    <ion-row>
+      <ion-col>
+        <ion-progress-bar color="tertiary" [value]="progress" buffer="0" class="progress-qr"></ion-progress-bar>
+      </ion-col>
+    </ion-row>
+  </div>
 </ion-grid>
