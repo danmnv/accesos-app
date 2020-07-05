@@ -16,12 +16,21 @@
         <img src="https://icons.iconarchive.com/icons/diversity-avatars/avatars/1024/batman-icon.png" class="avatar">
       </ion-row>
 
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>Employee</ion-label>
+            <ion-toggle [(ngModel)]="adminRole"></ion-toggle>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
       <form [formGroup]="formGroup" (ngSubmit)="logIn()">
         <ion-row>
           <ion-col>
             <ion-item>
-              <ion-label position="floating">ID</ion-label>
-              <ion-input inputmode="number" type="number" formControlName="id" required></ion-input>
+              <ion-label position="floating">{{ adminRole ? 'Email' : 'ID' }}</ion-label>
+              <ion-input inputmode="number" [type]="adminRole ? 'email' : 'number'" formControlName="id" required></ion-input>
             </ion-item>
           </ion-col>
         </ion-row>

@@ -13,6 +13,7 @@ import { UserService } from '../services/user.service';
 export class Authenticate implements OnInit {
 
   formGroup: FormGroup;
+  adminRole: Boolean = false;
 
   constructor(private formBuilder: FormBuilder, private afAuth: AngularFireAuth, private user$: UserService, private router: Router, public toastController: ToastController) {
     this.formGroup = this.formBuilder.group({
@@ -24,7 +25,7 @@ export class Authenticate implements OnInit {
   ngOnInit() {}
 
   async logIn() {
-    let email: string = `al${this.formGroup.value.id}@edu.uaa.mx`;
+    let email: string = (this.adminRole) ? this.formGroup.value.id : `al${this.formGroup.value.id}@edu.uaa.mx`;
     let password: string = this.formGroup.value.passwd;
 
     const toast = await this.toastController.create({ duration: 2500 });
