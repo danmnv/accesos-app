@@ -171,9 +171,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.scanActive = false;
         this.stopCamera();
 
-        this.token$.allowAccess(code.data).then(response => {
-          this.showConfirm(response.msg);
-        })
+        this.token$.allowAccess(code.data).then(response => this.showConfirm(response.msg, response.ok ? 'success' : 'danger'));
       }
       else if (this.scanActive) requestAnimationFrame(this.scan.bind(this));
 
@@ -183,9 +181,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   /** Show toast sucess */
-  async showConfirm(msg = "Success") {
+  async showConfirm(msg = "Success", type = "success") {
     const toast = await this.toastCtrl.create({
       message: msg,
+      color: type,
       duration: 2500
     })
 
