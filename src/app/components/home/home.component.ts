@@ -95,8 +95,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   /** Timer to increment bar progress and fetch token every minute */
   async setTimerValue() {
-    this.countdown = ++this.countdown > 600 ? 0 : this.countdown;
-    this.progress = (this.countdown / 600);
+    this.countdown = ++this.countdown > 3000 ? 0 : this.countdown;
+    this.progress = (this.countdown / 3000);
 
     // Fetch token when timer is zero
     if (this.countdown == 0) {
