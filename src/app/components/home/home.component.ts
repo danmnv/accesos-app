@@ -25,6 +25,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   videoElement: any;
   canvasElement: any;
   canvasContext: any;
+  stream: MediaStream;
 
   @ViewChild('video', { static: false }) video: ElementRef;
   @ViewChild('canvas', { static: false }) canvas: ElementRef;
@@ -122,12 +123,20 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.scanActive = !this.scanActive;
     
     if (this.scanActive) this.startScan();
+    else this.stopCamera();
+  }
+
+  /** Stop media stream */
+  stopCamera() {
+    this.videoElement.pause();
+    this.videoElement.src = "";
+    this.stream.getTracks()[0].stop();
   }
 
   /** Open video element (device camera) */
   async startScan() {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'enviroment'} });
-    this.videoElement.srcObject = stream;
+    this.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'enviroment'} });
+    this.videoElement.srcObject = this.stream;
     this.videoElement.setAttribute('playsinline', true);
     this.videoElement.play();
 
@@ -154,12 +163,17 @@ export class HomeComponent implements OnInit, OnDestroy {
       const imageData = this.canvasContext.getImageData(0, 0, this.canvasElement.height, this.canvasElement.width);
 
       // Read QR code
-      const code = jsQR(imageData.data, imageData.width, imageData.height);
+      const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: 'attemptBoth' });
 
+      console.log(code);
       // If code was decrypted
       if (code) {
-        this.showConfirm();
         this.scanActive = false;
+        this.stopCamera();
+
+        this.token$.allowAccess(code.data).then(response => {
+          this.showConfirm(response.msg);
+        })
       }
       else if (this.scanActive) requestAnimationFrame(this.scan.bind(this));
 
@@ -171,7 +185,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   /** Show toast sucess */
   async showConfirm(msg = "Success") {
     const toast = await this.toastCtrl.create({
-      message: msg
+      message: msg,
+      duration: 2500
     })
 
     toast.present();
