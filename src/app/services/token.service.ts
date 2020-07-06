@@ -14,6 +14,7 @@ export class TokenService {
     this.buildToken = this.fns.httpsCallable('createToken');
   }
 
+  /** Call 'createToken' function from Firebase */
   async fetchToken(): Promise<any> {
     return await this.buildToken(null).toPromise();
   }

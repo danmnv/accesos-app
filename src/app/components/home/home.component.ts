@@ -1,13 +1,11 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Subscription, interval } from 'rxjs';
-import { UserService } from 'src/app/services/user.service';
 import { ToastController, LoadingController } from '@ionic/angular';
-import { AngularFireFunctions } from '@angular/fire/functions';
-
-import { environment } from '../../../environments/environment';
-import jsQR from 'jsqr';
+import { UserService } from 'src/app/services/user.service';
 import { TokenService } from 'src/app/services/token.service';
+import { Subscription, interval } from 'rxjs';
+import { Observable } from 'rxjs';
+
+import jsQR from 'jsqr';
 
 @Component({
   selector: 'app-home',
@@ -34,6 +32,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   loading: HTMLIonLoadingElement;
 
   constructor(private user$: UserService, private token$: TokenService, private toastCtrl: ToastController, private loadingCtrl: LoadingController) {
+    // Defaults
     this.coded = '';
     this.showQR = false;
     this.scanActive = false;
@@ -41,18 +40,26 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    // Get authentication
     this.user$.afAuth.onAuthStateChanged(auth => {
+      // If exist 
       if (auth) {
+        // Fetch user doc
         this.user$.user.subscribe(async user => {
+            // If user is student
             if (!user.admin) {
               await this.showLoad();
 
+              // Fetch token from server
               this.token$.fetchToken().then(async response => {
                 await this.stopLoad();
                 
+                // Success
                 if (response.ok) {
                   this.showQR = true;
                   this.coded = response.jwt;
+
+                  // Timer to fetch token every minute
                   this.subscription = this.timer.subscribe(() => this.setTimerValue());
                 }
               });
@@ -63,27 +70,33 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    // Set html elements
     this.videoElement = this.video.nativeElement;
     this.canvasElement = this.canvas.nativeElement;
     this.canvasContext = this.canvas.nativeElement.getContext('2d');
   }
 
   ngOnDestroy() {
+    // Delete timer
     this.subscription.unsubscribe();
   }
 
+  /** Call fetchToken from TokenService */
   fetchToken() {
     this.token$.fetchToken().then(async response => {
       await this.stopLoad();
       
+      // Success
       if (response.ok) this.coded = response.jwt;
     });
   }
 
+  /** Timer to increment bar progress and fetch token every minute */
   async setTimerValue() {
     this.countdown = ++this.countdown > 600 ? 0 : this.countdown;
     this.progress = (this.countdown / 600);
 
+    // Fetch token when timer is zero
     if (this.countdown == 0) {
       await this.showLoad();
       
@@ -91,16 +104,26 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Show loading object */
   async showLoad() {
     this.loading = await this.loadingCtrl.create({});
     await this.loading.present();
   }
 
+  /** Stop loading object */
   async stopLoad() {
     await this.loading.dismiss();
     this.loading = null;
   }
 
+  /** Toggle scanActive */
+  action() {
+    this.scanActive = !this.scanActive;
+    
+    if (this.scanActive) this.startScan();
+  }
+
+  /** Open video element (device camera) */
   async startScan() {
     const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'enviroment'} });
     this.videoElement.srcObject = stream;
@@ -111,8 +134,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     requestAnimationFrame(this.scan.bind(this));
   }
 
+  /** Scan QR code */
   async scan() {
+    // Video element is ready
     if (this.videoElement.readyState === this.videoElement.HAVE_ENOUGH_DATA) {
+      // Stop loading
       if (this.loading) {
         await this.stopLoad();
         this.scanActive = true;
@@ -123,15 +149,15 @@ export class HomeComponent implements OnInit, OnDestroy {
 
       this.canvasContext.drawImage(this.videoElement, 0, 0, this.canvasElement.height, this.canvasElement.width);
 
+      // Get image data
       const imageData = this.canvasContext.getImageData(0, 0, this.canvasElement.height, this.canvasElement.width);
 
-      const code = jsQR(imageData.data, imageData.width, imageData.height, {
-        inversionAttempts: 'attemptBoth'
-      })
-      console.log(code);
+      // Read QR code
+      const code = jsQR(imageData.data, imageData.width, imageData.height);
 
+      // If code was decrypted
       if (code) {
-        this.showConfirm(`Token_ ${code}`);
+        this.showConfirm();
         this.scanActive = false;
       }
       else if (this.scanActive) requestAnimationFrame(this.scan.bind(this));
@@ -141,15 +167,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  action() {
-    this.scanActive = !this.scanActive;
-    
-    if (this.scanActive) this.startScan();
-  }
-
-  async showConfirm(decrypt) {
+  /** Show toast sucess */
+  async showConfirm(msg = "Success") {
     const toast = await this.toastCtrl.create({
-      message: decrypt
+      message: msg
     })
 
     toast.present();
