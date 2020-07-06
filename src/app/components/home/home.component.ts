@@ -31,15 +31,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   
   loading: HTMLIonLoadingElement;
 
-  constructor(private user$: UserService, private token$: TokenService, private toastCtrl: ToastController, private loadingCtrl: LoadingController) {
+  constructor(private user$: UserService, private token$: TokenService, private toastCtrl: ToastController, private loadingCtrl: LoadingController) {}
+
+  ngOnInit() {
     // Defaults
     this.coded = '';
     this.showQR = false;
     this.scanActive = false;
     this.timer = interval(100);
-  }
 
-  ngOnInit() {
     // Get authentication
     this.user$.afAuth.onAuthStateChanged(auth => {
       // If exist 
@@ -78,6 +78,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     // Delete timer
+    console.log("destroy")
     this.subscription.unsubscribe();
   }
 
