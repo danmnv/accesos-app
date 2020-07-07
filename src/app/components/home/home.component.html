@@ -2,8 +2,8 @@
   
   <div *ngIf="showQR; else adminSpace">
     <ion-row>
-      <ion-col>
-        <qrcode width="256" [qrdata]="coded" elementType="url" errorCorrectionLevel="'Q'" margin="1"></qrcode>
+      <ion-col><br>
+        <qrcode width="400" [qrdata]="coded" elementType="url" errorCorrectionLevel="'Q'" margin="1"></qrcode>
       </ion-col>
     </ion-row>
   
